@@ -59,4 +59,41 @@ app.MapGet("/api/tarefas/{id}", (AppDataContext context, int id) =>
     return Results.Ok(tarefa);
 });
 
+app.MapPut("/api/tarefas/{id}", (AppDataContext context, int id, Tarefa tarefaAtualizada) =>
+{
+    var tarefaExistente = context.Tarefas.Find(id);
+
+    if (tarefaExistente == null)
+    {
+        return Results.NotFound($"Tarefa com ID {id} não encontrada para atualização.");
+    }
+
+    if (string.IsNullOrEmpty(tarefaAtualizada.Titulo))
+    {
+        return Results.BadRequest("Título é obrigatório.");
+    }
+    if (tarefaAtualizada.Titulo.Length < 3)
+    {
+        return Results.BadRequest("Título deve ter no mínimo 3 caracteres.");
+    }
+    if (tarefaAtualizada.StatusId == null)
+    {
+        return Results.BadRequest("Status é obrigatório.");
+    }
+
+    var status = context.Status.Find(tarefaAtualizada.StatusId);
+    if (status == null)
+    {
+        return Results.NotFound($"Status com ID {tarefaAtualizada.StatusId} não encontrado");
+    }
+
+    tarefaExistente.Titulo = tarefaAtualizada.Titulo;
+    tarefaExistente.StatusId = tarefaAtualizada.StatusId;
+    tarefaExistente.Status = status;
+
+    context.SaveChanges();
+
+    return Results.Ok(tarefaExistente);
+});
+
 app.Run();
