@@ -41,4 +41,10 @@ app.MapPost("/api/tarefas", (AppDataContext context, Tarefa tarefa) =>
     return Results.Created($"/api/tarefas/{tarefa.Id}", tarefa);
 });
 
+app.MapGet("/api/tarefas", (AppDataContext context) =>
+{
+    var tarefas = context.Tarefas.Include(t => t.Status).ToList();
+    return Results.Ok(tarefas);
+});
+
 app.Run();
