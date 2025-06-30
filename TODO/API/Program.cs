@@ -13,5 +13,32 @@ app.MapGet("/", (AppDataContext context) =>
     return Results.Ok(status);
 });
 
+app.MapPost("/api/tarefas", (AppDataContext context, Tarefa tarefa) =>
+{
+    if (string.IsNullOrEmpty(tarefa.Titulo))
+    {
+        return Results.BadRequest("Título é obrigatório.");
+    }
+    if (tarefa.Titulo.Length < 3)
+    {
+        return Results.BadRequest("Título deve ter no mínimo 3 caracteres.");
+    }
+    if (tarefa.StatusId == null)
+    {
+        return Results.BadRequest("Status é obrigatório.");
+    }
+
+    var status = context.Status.Find(tarefa.StatusId);
+    if (status == null)
+    {
+        return Results.NotFound($"Status com ID {tarefa.StatusId} não encontrado");
+    }
+
+    tarefa.Status = status;
+    context.Tarefas.Add(tarefa);
+    context.SaveChanges();
+
+    return Results.Created($"/api/tarefas/{tarefa.Id}", tarefa);
+});
 
 app.Run();
