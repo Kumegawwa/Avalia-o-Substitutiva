@@ -47,4 +47,16 @@ app.MapGet("/api/tarefas", (AppDataContext context) =>
     return Results.Ok(tarefas);
 });
 
+app.MapGet("/api/tarefas/{id}", (AppDataContext context, int id) =>
+{
+    var tarefa = context.Tarefas.Include(t => t.Status).FirstOrDefault(t => t.Id == id);
+
+    if (tarefa == null)
+    {
+        return Results.NotFound($"Tarefa com ID {id} não encontrada.");
+    }
+
+    return Results.Ok(tarefa);
+});
+
 app.Run();
