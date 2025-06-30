@@ -1,0 +1,49 @@
+### Arquivo de Teste da API de Tarefas
+
+# Variável para o host da API
+@host = http://localhost:5085
+
+### 1. Criar Tarefa (POST)
+# @name criarTarefa
+POST {{host}}/api/tarefas
+Content-Type: application/json
+
+{
+    "titulo": "Estudar para a prova de ASP.NET",
+    "statusId": 1
+}
+
+###
+# Criar mais uma tarefa
+POST {{host}}/api/tarefas
+Content-Type: application/json
+
+{
+    "titulo": "Fazer o projeto da faculdade",
+    "statusId": 2
+}
+
+
+### 2. Listar Todas as Tarefas (GET)
+GET {{host}}/api/tarefas
+
+
+### 3. Buscar Tarefa por ID (GET)
+# Altere o '1' para um ID de tarefa existente
+GET {{host}}/api/tarefas/1
+
+
+### 4. Atualizar Tarefa (PUT)
+# Altere o '1' para um ID de tarefa existente
+PUT {{host}}/api/tarefas/1
+Content-Type: application/json
+
+{
+    "titulo": "Estudar MUITO para a prova de ASP.NET",
+    "statusId": 3
+}
+
+
+### 5. Remover Tarefa (DELETE)
+# Altere o '2' para um ID de tarefa existente
+DELETE {{host}}/api/tarefas/2
