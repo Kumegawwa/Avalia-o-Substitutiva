@@ -96,4 +96,19 @@ app.MapPut("/api/tarefas/{id}", (AppDataContext context, int id, Tarefa tarefaAt
     return Results.Ok(tarefaExistente);
 });
 
+app.MapDelete("/api/tarefas/{id}", (AppDataContext context, int id) =>
+{
+    var tarefa = context.Tarefas.Find(id);
+
+    if (tarefa == null)
+    {
+        return Results.NotFound($"Tarefa com ID {id} não encontrada para remoção.");
+    }
+
+    context.Tarefas.Remove(tarefa);
+    context.SaveChanges();
+
+    return Results.NoContent();
+});
+
 app.Run();
